@@ -21,6 +21,7 @@ module.exports = class ArrayPromise extends ArrayTypedPromise
       @then (value) ->
         defered = Q.defer()
         async[key] value, args..., (params..., done) ->
+          #TODO: I would prefer ever (non-serie) function to have a param being iterated when available, and not like now, when they are ALL available.
           Q.all(params).then (params) ->
             iterator params...
           .then (result) ->
