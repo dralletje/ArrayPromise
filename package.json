@@ -1,0 +1,28 @@
+{
+    "name": "arraypromise",
+    "version": "0.3.0",
+    "author": "Michiel Dral <michiel@sunsethosting.co.uk>",
+    "description": "An promise, on which you can apply array methods. For when you are sure, the promise will return an array!\n",
+    "main": "./index.coffee",
+    "repository": {
+        "type": "git",
+        "url": "https://Dralletje@bitbucket.org/Dralletje/terraform.git"
+    },
+    "keywords": [
+        "minecraft",
+        "multicraft",
+        "servermanagment"
+    ],
+    "dependencies": {
+        "kew": "*",
+        "better-stack-traces": "*"
+    },
+    "devDependencies": {
+        "coffee-script": "*",
+        "npm-yaml": "*"
+    },
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.10"
+    }
+}

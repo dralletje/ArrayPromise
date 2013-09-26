@@ -1,0 +1,29 @@
+name: "arraypromise"
+version: "0.3.0"
+author: "Michiel Dral <michiel@sunsethosting.co.uk>"
+description: >
+  An promise, on which you can apply array methods.
+  For when you are sure, the promise will return an array!
+  
+main: "./index.coffee"
+
+repository: 
+  type: "git"
+  url: "https://Dralletje@bitbucket.org/Dralletje/terraform.git"
+  
+keywords: 
+  - "minecraft"
+  - "multicraft"
+  - "servermanagment"
+
+dependencies: 
+  kew: "*"
+  better-stack-traces: "*"
+  
+# Need to fix these, get them global or something
+devDependencies: 
+  coffee-script: "*"
+  npm-yaml: "*"
+license: "MIT"
+engines: 
+  node: ">=0.10"
