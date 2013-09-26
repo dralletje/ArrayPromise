@@ -8,22 +8,22 @@ All based on the kew (https://github.com/Obvious/kew) promise implementation, bu
 Small example to show his promise-full-ness:
 
 ```coffeescript
-    Q = require 'kew'
-    require('arraypromise').install(Q.defer().constructor) # Install does add the 'array' method on the given promise prototype
-    
-    defered = Q.defer() # Create a new promise
-    defered.array.map( (value) -> # Notice there is no callback, still it's async
-      Q.resolve value*7 # Make it return a promise, just to show promise-compatibility
-    ).then (result) ->
-      console.log result
-      
-    r = Q.resolve
-    defered.resolve [
-      r 1,
-      r 2,
-      r 3,
-      r 4
-    ]
+Q = require 'kew'
+require('arraypromise').install(Q.defer().constructor) # Install does add the 'array' method on the given promise prototype
+
+defered = Q.defer() # Create a new promise
+defered.array.map( (value) -> # Notice there is no callback, still it's async
+  Q.resolve value*7 # Make it return a promise, just to show promise-compatibility
+).then (result) ->
+  console.log result
+  
+r = Q.resolve
+defered.resolve [
+  r 1,
+  r 2,
+  r 3,
+  r 4
+]
 ```
 
 It is promised all over the place, ALL OVER!
