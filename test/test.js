@@ -54,34 +54,36 @@
       }, function(fullfilling, whenFullfilled) {
         describe(whenFullfilled, function() {
           describe("#map()", function() {
-            return it("should return 1, 4, 9, 16", function(done) {
+            it("should return 1, 4, 9, 16", function(done) {
               this.defered.map(function(val) {
                 return val * val;
               }).should.become([1, 4, 9, 16]).notify(done);
               return fullfilling(this.defered);
             });
-          });
-          describe("#reduce()", function() {
-            return it("Should return [1,2,3,4] reduced with a count function", function(done) {
-              this.defered.reduce(0, function(val, memo) {
-                return memo + val;
-              }).should.become(10).notify(done);
-              return fullfilling(this.defered);
-            });
-          });
-          describe("#map(Promise)", function() {
-            return it("should return 1, 4, 9, 16", function(done) {
+            return it("(Returning a promise) should return 1, 4, 9, 16", function(done) {
               this.defered.map(function(val) {
                 return Q.resolve(val * val);
               }).should.become([1, 4, 9, 16]).notify(done);
               return fullfilling(this.defered);
             });
           });
-          return describe("#reduce(Promise)", function() {
-            return it("Should return [1,2,3,4] reduced with a count function", function(done) {
+          return describe("#reduce()", function() {
+            it("should return [1,2,3,4] reduced with a count function", function(done) {
+              this.defered.reduce(0, function(val, memo) {
+                return memo + val;
+              }).should.become(10).notify(done);
+              return fullfilling(this.defered);
+            });
+            it("(Returning a promise) should return [1,2,3,4] reduced with a count function", function(done) {
               this.defered.reduce(0, function(val, memo) {
                 return Q.resolve(memo + val);
               }).should.become(10).notify(done);
+              return fullfilling(this.defered);
+            });
+            return it("should throw an error", function(done) {
+              this.defered.reduce(0, function(val, memo) {
+                return Q.reject(new Error("An error!"));
+              }).should.be.rejected.notify(done);
               return fullfilling(this.defered);
             });
           });

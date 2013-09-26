@@ -43,29 +43,30 @@ Object.forEach {
             ).should.become([1,4,9,16]).notify(done)
             fullfilling @defered
         
-        describe "#reduce()", ->
-          it "Should return [1,2,3,4] reduced with a count function", (done) ->
-            @defered.reduce(0, (val, memo) ->
-              memo + val
-            ).should.become(10).notify(done)
-            fullfilling @defered
-            
-        describe "#map(Promise)", ->
-          it "should return 1, 4, 9, 16", (done) ->
+          it "(Returning a promise) should return 1, 4, 9, 16", (done) ->
             @defered.map((val) ->
               Q.resolve val*val
             ).should.become([1,4,9,16]).notify(done)
             fullfilling @defered
         
-        describe "#reduce(Promise)", ->
-          it "Should return [1,2,3,4] reduced with a count function", (done) ->
+        describe "#reduce()", ->
+          it "should return [1,2,3,4] reduced with a count function", (done) ->
+            @defered.reduce(0, (val, memo) ->
+              memo + val
+            ).should.become(10).notify(done)
+            fullfilling @defered
+        
+          it "(Returning a promise) should return [1,2,3,4] reduced with a count function", (done) ->
             @defered.reduce(0, (val, memo) ->
               Q.resolve memo + val
             ).should.become(10).notify(done)
             fullfilling @defered
-        
-      #describe "when fillfilled with promises", ->
-        #describe ""
+            
+          it "should throw an error", (done) ->
+            @defered.reduce(0, (val, memo) ->
+              Q.reject new Error "An error!"
+            ).should.be.rejected.notify done
+            fullfilling @defered
         
       describe "when rejected", ->      
         describe "#any()", ->

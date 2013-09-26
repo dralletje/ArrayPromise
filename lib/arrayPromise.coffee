@@ -29,12 +29,12 @@ module.exports = class ArrayPromise extends ArrayTypedPromise
             done error
             
         , (err, value) ->
-          if not value?
+          if not value? and (err not instanceof Error)
             value = err
             err = undefined
             
           if err?
-            defered.reject err
+            return defered.reject err
           defered.resolve value
         defered.promise
     
