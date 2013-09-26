@@ -18,7 +18,7 @@ Object.forEach = (object, cb) ->
 Object.forEach {
   "Normal Promise, casted to ArrayPromise": ->
     defer = Q.defer()
-    @defered = defer.asArray
+    @defered = defer.array
   "ArrayPromise": ->
     @defered = new ArrayPromise()
 }, (before, description) ->

@@ -42,7 +42,7 @@ module.exports = class ArrayPromise extends ArrayTypedPromise
 module.exports.install = (Promise) ->
   if not Promise::?
     Promise = Promise.constructor
-  polyfill.extendPropertie Promise, 'asArray', () ->
+  polyfill.extendPropertie Promise, 'array', () ->
     #this.promise = Promise.prototype
     @__proto__ = module.exports.prototype
     this

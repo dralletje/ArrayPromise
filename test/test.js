@@ -31,7 +31,7 @@
     "Normal Promise, casted to ArrayPromise": function() {
       var defer;
       defer = Q.defer();
-      return this.defered = defer.asArray;
+      return this.defered = defer.array;
     },
     "ArrayPromise": function() {
       return this.defered = new ArrayPromise();
