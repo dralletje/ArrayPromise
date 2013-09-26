@@ -17,6 +17,7 @@ keywords:
 
 dependencies: 
   kew: "*"
+  async: "*"
   
 # Need to fix these, get them global or something
 devDependencies: 

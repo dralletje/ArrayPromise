@@ -1,7 +1,4 @@
-Q = require 'kew'
-Promise = Q.defer().constructor
-  
-module.exports = (Type) ->
+module.exports = (Type, Promise) ->
   class TypedPromise extends Promise
     constructor: () ->
       super()

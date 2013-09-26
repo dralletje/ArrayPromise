@@ -7,64 +7,68 @@ chai.use(chaiAsPromised)
 should = chai.should()
 
 ArrayPromise = require '../'
-q = require 'kew'
-ArrayPromise.install q.defer()
+Q = require 'kew'
+ArrayPromise.install Q.defer()
 
-#console.log ArrayPromise.toString()
+Object.forEach = (object, cb) ->
+  for own key,value of object
+    cb(value, key, object)
 
-describe "ArrayPromise", ->
-  beforeEach ->
-    @defered = new ArrayPromise()
-    
-  afterEach ->
-    @defered = undefined
-    
-  describe "when fullfilled with non-promises", ->    
-    describe "#map()", ->
-      it "should return 1, 4, 9, 16", (done) ->
-        @defered.map((val) ->
-          val*val
-        ).should.become([1,4,9,16]).notify(done)
-        @defered.resolve [1,2,3,4]
-        
-    describe "#reduce()", ->
-      it "Should return [1,2,3,4] reduced with a count function", (done) ->
-        @defered.reduce((val, memo) ->
-          memo + val
-        ).should.become(10).notify(done)
-        @defered.resolve [1,2,3,4]
-        
-  describe "when rejected", ->      
-    describe "#any()", ->
-      it "should throw an error", (done) ->
-        @defered.map().should.be.rejected.notify(done)
-        @defered.reject(new Error)
-      
-describe "Normal Promise, casted to ArrayPromise", ->
-  beforeEach ->
-    defer = q.defer()
+# Loop through every way of making a promise! :D
+Object.forEach {
+  "Normal Promise, casted to ArrayPromise": ->
+    defer = Q.defer()
     @defered = defer.asArray
+  "ArrayPromise": ->
+    @defered = new ArrayPromise()
+}, (before, description) ->
+  describe description, ->
+    beforeEach before
     
-  afterEach ->
-    @defered = undefined
+    afterEach ->
+      @defered = undefined
     
-  describe "when fullfilled with non-promises", ->    
-    describe "#map()", ->
-      it "should return 1, 4, 9, 16", (done) ->
-        @defered.map((val) ->
-          val*val
-        ).should.become([1,4,9,16]).notify(done)
-        @defered.resolve [1,2,3,4]
+    Object.forEach {
+      "when fullfilled with non-promises": (defered) ->
+        defered.resolve [1,2,3,4]
+      "when fullfilled with promises": (defered) ->
+        r = Q.resolve
+        defered.resolve [r(1), r(2), r(3), r(4)]
+    }, (fullfilling, whenFullfilled) ->
+      describe whenFullfilled, ->    
+        describe "#map()", ->
+          it "should return 1, 4, 9, 16", (done) ->
+            @defered.map((val) ->
+              val*val
+            ).should.become([1,4,9,16]).notify(done)
+            fullfilling @defered
         
-    describe "#reduce()", ->
-      it "Should return [1,2,3,4] reduced with a count function", (done) ->
-        @defered.reduce((val, memo) ->
-          memo + val
-        ).should.become(10).notify(done)
-        @defered.resolve [1,2,3,4]
+        describe "#reduce()", ->
+          it "Should return [1,2,3,4] reduced with a count function", (done) ->
+            @defered.reduce(0, (val, memo) ->
+              memo + val
+            ).should.become(10).notify(done)
+            fullfilling @defered
+            
+        describe "#map(Promise)", ->
+          it "should return 1, 4, 9, 16", (done) ->
+            @defered.map((val) ->
+              Q.resolve val*val
+            ).should.become([1,4,9,16]).notify(done)
+            fullfilling @defered
         
-  describe "when rejected", ->      
-    describe "#any()", ->
-      it "should throw an error", (done) ->
-        @defered.map().should.be.rejected.notify(done)
-        @defered.reject(new Error)
+        describe "#reduce(Promise)", ->
+          it "Should return [1,2,3,4] reduced with a count function", (done) ->
+            @defered.reduce(0, (val, memo) ->
+              Q.resolve memo + val
+            ).should.become(10).notify(done)
+            fullfilling @defered
+        
+      #describe "when fillfilled with promises", ->
+        #describe ""
+        
+      describe "when rejected", ->      
+        describe "#any()", ->
+          it "should throw an error", (done) ->
+            @defered.map((->)).should.be.rejected.notify(done)
+            @defered.reject(new Error)
