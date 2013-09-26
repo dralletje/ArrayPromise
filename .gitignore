@@ -7,7 +7,7 @@ lib-cov
 *.pid
 *.gz
 
-nodule_modules
+node_modules
 pids
 logs
 results

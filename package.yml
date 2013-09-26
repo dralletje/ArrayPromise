@@ -1,5 +1,5 @@
 name: "arraypromise"
-version: "0.3.0"
+version: "0.5.0"
 author: "Michiel Dral <michiel@sunsethosting.co.uk>"
 description: >
   An promise, on which you can apply array methods.
@@ -9,21 +9,31 @@ main: "./index.coffee"
 
 repository: 
   type: "git"
-  url: "https://Dralletje@bitbucket.org/Dralletje/terraform.git"
+  url: "https://github.com/dralletje/ArrayPromise.git"
   
 keywords: 
-  - "minecraft"
-  - "multicraft"
-  - "servermanagment"
+  - "promises"
+  - "array"
 
 dependencies: 
   kew: "*"
-  better-stack-traces: "*"
   
 # Need to fix these, get them global or something
 devDependencies: 
   coffee-script: "*"
   npm-yaml: "*"
-license: "MIT"
+  better-stack-traces: "*"
+  
+  # Tests
+  chai: "*"
+  chai-as-promised: "*"
+  grunt: "*"
+  grunt-contrib-coffee: "*"
+  grunt-contrib-watch: "*"
+  grunt-simple-mocha: "*"
+  ## Not sure wether or not to add this one :/
+  #mocha: *
+  
+license: "GLP v2.0"
 engines: 
   node: ">=0.10"
