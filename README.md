@@ -14,16 +14,11 @@ require('arraypromise').install(Q.defer().constructor) # Install does add the 'a
 defered = Q.defer() # Create a new promise
 defered.array.map( (value) -> # Notice there is no callback, still it's async
   Q.resolve value*7 # Make it return a promise, just to show promise-compatibility
-).then (result) ->
-  console.log result
+).then (result) -> # The result of .map() is also just a promise! :D
+  console.log result # log the result
   
-r = Q.resolve
-defered.resolve [
-  r 1,
-  r 2,
-  r 3,
-  r 4
-]
+r = Q.resolve # Shortcut for making promises of values
+defered.resolve [r 1, r 2, r 3, r 4] # Resolve the promise with promises of 1, 2, 3 and 4
 ```
 
 It is promised all over the place, ALL OVER!
