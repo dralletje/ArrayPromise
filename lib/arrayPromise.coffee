@@ -1,5 +1,5 @@
 typedPromise = require('./typedPromise')
-polyfill = require 'polyfill'
+polyfill = require './lib/polyfill'
 async = require 'async'
 
 Q = require 'kew'
