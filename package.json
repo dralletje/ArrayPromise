@@ -1,6 +1,6 @@
 {
   "name": "arraypromise",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "author": "Michiel Dral <michiel@sunsethosting.co.uk>",
   "description": "An promise, on which you can apply array methods. For when you are sure the promise will return an array!\n",
   "main": "./index.coffee",
