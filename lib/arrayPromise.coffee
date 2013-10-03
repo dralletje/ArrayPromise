@@ -8,35 +8,57 @@ Promise = Q.defer().constructor
 ArrayTypedPromise = typedPromise(Array, Promise)
 
 module.exports = class ArrayPromise extends ArrayTypedPromise
+oneArgument = ["filter"]
       
 ["each", "map", "filter", "arrayReject", "reduce", "detect", "sortBy", "some", "every", "concat"].forEach (method) ->
   ["", "Series", "Limit"].forEach (modifier) ->
     key = method + modifier
     if not async[key]? then return
 
+    ## Add every async method to the ArrayPromise prototype
     module.exports::[key] = (args..., iterator) ->
+      # When called, check for a iterator function, if not a function, error!
       if iterator not instanceof Function 
         throw new TypeError "Iterator is not a function but #{iterator}"
         
-      @then (value) ->
-        defered = Q.defer()
-        async[key] value, args..., (params..., done) ->
-          #TODO: I would prefer ever (non-serie) function to have a param being iterated when available, and not like now, when they are ALL available.
+      ## Wait for ^THIS^ promise to fullfill
+      @then (value) -> 
+        defered = Q.defer() # Make a new promise
+        async[key] value, args..., (params..., done) -> # Call the Async equivalent and have a callback with variables (params...) and the callback (done)
+          
+          # Wait for all params to fullfill
           Q.all(params).then (params) ->
-            iterator params...
+            iterator params... # Run the user given function with the fullfilled params
+            
+          # 'Convert' the result into an Node Callback
+          # (Or just a result callback, when it's in 'oneArgument')
           .then (result) ->
-            done null, result
+            if oneArgument.indexOf(key) isnt -1
+              done result
+            else
+              done null, result
+              
           .fail (error) ->
-            done error
-            
+            if oneArgument.indexOf(key) isnt -1
+              done false
+            else
+              done error
+              
+        ## When all the items have finished, return the result in a promise
         , (err, value) ->
-          if not value? and (err not instanceof Error)
-            value = err
-            err = undefined
+          if err instanceof Array
+            localdefer = Q.all(err)
+          else
+            localdefer = Q.resolve(err)
             
-          if err?
-            return defered.reject err
-          defered.resolve value
+          localdefer.then (err) ->
+            if not value? and (err not instanceof Error)
+              value = err
+              err = undefined
+            
+            if err?
+              return defered.reject err
+            defered.resolve value
         defered.promise
     
 ## A function to add a .asArray propertie, to make a promise typed

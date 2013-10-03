@@ -8,6 +8,8 @@
 
   chai.use(chaiAsPromised);
 
+  chai.Assertion.includeStack = true;
+
   should = chai.should();
 
   ArrayPromise = require('../');
@@ -53,6 +55,14 @@
         }
       }, function(fullfilling, whenFullfilled) {
         describe(whenFullfilled, function() {
+          describe("#filter()", function() {
+            return it("should return only even numbers", function(done) {
+              this.defered.filter(function(val) {
+                return (val % 2) === 0;
+              }).should.become([2, 4]).notify(done);
+              return fullfilling(this.defered);
+            });
+          });
           describe("#map()", function() {
             it("should return 1, 4, 9, 16", function(done) {
               this.defered.map(function(val) {

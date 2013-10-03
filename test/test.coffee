@@ -2,7 +2,7 @@ chai = require("chai")
 chaiAsPromised = require("chai-as-promised")
 
 chai.use(chaiAsPromised)
-#chai.Assertion.includeStack = true
+chai.Assertion.includeStack = true
 
 should = chai.should()
 
@@ -35,7 +35,15 @@ Object.forEach {
         r = Q.resolve
         defered.resolve [r(1), r(2), r(3), r(4)]
     }, (fullfilling, whenFullfilled) ->
-      describe whenFullfilled, ->    
+      describe whenFullfilled, ->  
+      
+        describe "#filter()", ->
+          it "should return only even numbers", (done) ->
+            @defered.filter((val) ->
+              (val % 2) is 0
+            ).should.become([2,4]).notify(done)
+            fullfilling @defered
+        
         describe "#map()", ->
           it "should return 1, 4, 9, 16", (done) ->
             @defered.map((val) ->
