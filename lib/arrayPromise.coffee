@@ -10,13 +10,14 @@ ArrayTypedPromise = typedPromise(Array, Promise)
 module.exports = class ArrayPromise extends ArrayTypedPromise
 oneArgument = ["filter"]
       
-["each", "map", "filter", "arrayReject", "reduce", "detect", "sortBy", "some", "every", "concat"].forEach (method) ->
+["each", "map", "filter", "reject", "reduce", "detect", "sortBy", "some", "every", "concat"].forEach (method) ->
   ["", "Series", "Limit"].forEach (modifier) ->
     key = method + modifier
     if not async[key]? then return
-
+    
     ## Add every async method to the ArrayPromise prototype
-    module.exports::[key] = (args..., iterator) ->
+    # (With the 'Array' suffix)
+    module.exports::[key + 'Array'] = (args..., iterator) ->
       # When called, check for a iterator function, if not a function, error!
       if iterator not instanceof Function 
         throw new TypeError "Iterator is not a function but #{iterator}"
@@ -60,6 +61,12 @@ oneArgument = ["filter"]
               return defered.reject err
             defered.resolve value
         defered.promise
+    
+    # If the method does not already exists (Not the case with reject :p) then, add it pure
+    if Promise::[key]?
+      return
+    module.exports::[key] = module.exports::[key + "Array"]
+    
     
 ## A function to add a .asArray propertie, to make a promise typed
 module.exports.install = (Promise) ->
