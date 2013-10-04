@@ -8,7 +8,7 @@ Promise = Q.defer().constructor
 ArrayTypedPromise = typedPromise(Array, Promise)
 
 module.exports = class ArrayPromise extends ArrayTypedPromise
-oneArgument = ["filter"]
+oneArgument = ["filter", "reject"]
       
 ["each", "map", "filter", "reject", "reduce", "detect", "sortBy", "some", "every", "concat"].forEach (method) ->
   ["", "Series", "Limit"].forEach (modifier) ->

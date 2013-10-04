@@ -43,6 +43,13 @@ Object.forEach {
               (val % 2) is 0
             ).should.become([2,4]).notify(done)
             fullfilling @defered
+            
+        describe "#rejectArray()", ->
+          it "should return only odd numbers", (done) ->
+            @defered.rejectArray((val) ->
+              (val % 2) is 0
+            ).should.become([1,3]).notify(done)
+            fullfilling @defered
         
         describe "#map()", ->
           it "should return 1, 4, 9, 16", (done) ->

@@ -63,6 +63,14 @@
               return fullfilling(this.defered);
             });
           });
+          describe("#rejectArray()", function() {
+            return it("should return only odd numbers", function(done) {
+              this.defered.rejectArray(function(val) {
+                return (val % 2) === 0;
+              }).should.become([1, 3]).notify(done);
+              return fullfilling(this.defered);
+            });
+          });
           describe("#map()", function() {
             it("should return 1, 4, 9, 16", function(done) {
               this.defered.map(function(val) {
