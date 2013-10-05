@@ -2,7 +2,7 @@ chai = require("chai")
 chaiAsPromised = require("chai-as-promised")
 
 chai.use(chaiAsPromised)
-chai.Assertion.includeStack = true
+#chai.Assertion.includeStack = true
 
 should = chai.should()
 
@@ -16,9 +16,11 @@ Object.forEach = (object, cb) ->
 
 # Loop through every way of making a promise! :D
 Object.forEach {
+  ### Disable arraypromise now, because it clutters tests
   "Normal Promise, casted to ArrayPromise": ->
     defer = Q.defer()
     @defered = defer.array
+  ###
   "ArrayPromise": ->
     @defered = new ArrayPromise()
 }, (before, description) ->
@@ -36,6 +38,25 @@ Object.forEach {
         defered.resolve [r(1), r(2), r(3), r(4)]
     }, (fullfilling, whenFullfilled) ->
       describe whenFullfilled, ->  
+      
+        describe "#_groupBy()", ->
+          it "should return an even and odd propertie", (done) ->
+            @defered._groupBy((val) ->
+              if (val % 2) is 0 then 'even' else 'odd'
+            ).should.become(
+              odd: [1,3]
+              even: [2,4]
+            ).notify(done)
+            fullfilling @defered
+
+          it "(returning a promise) should return an even and odd propertie", (done) ->
+            @defered._groupBy((val) ->
+              Q.resolve if (val % 2) is 0 then 'even' else 'odd'
+            ).should.become(
+              odd: [1,3]
+              even: [2,4]
+            ).notify(done)
+            fullfilling @defered
       
         describe "#filter()", ->
           it "should return only even numbers", (done) ->

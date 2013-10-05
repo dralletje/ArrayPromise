@@ -1,5 +1,7 @@
 typedPromise = require('./typedPromise')
 polyfill = require './lib/polyfill'
+
+_ = require 'underscore'
 async = require 'async'
 
 Q = require 'kew'
@@ -10,7 +12,9 @@ ArrayTypedPromise = typedPromise(Array, Promise)
 module.exports = class ArrayPromise extends ArrayTypedPromise
 oneArgument = ["filter", "reject"]
       
+# Async methods
 ["each", "map", "filter", "reject", "reduce", "detect", "sortBy", "some", "every", "concat"].forEach (method) ->
+  # function variants
   ["", "Series", "Limit"].forEach (modifier) ->
     key = method + modifier
     if not async[key]? then return
@@ -66,7 +70,17 @@ oneArgument = ["filter", "reject"]
     if Promise::[key]?
       return
     module.exports::[key] = module.exports::[key + "Array"]
+
+
+## Underscore methods
+["groupBy"].forEach (method) ->
+  module.exports::["_" + method] = (iterator, args...) ->
+    m = _[method]
     
+    @then (list) ->
+      Q.all(list).then (list) ->
+        m list, iterator
+        , args...
     
 ## A function to add a .asArray propertie, to make a promise typed
 module.exports.install = (Promise) ->

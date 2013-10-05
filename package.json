@@ -14,7 +14,8 @@
   ],
   "dependencies": {
     "kew": "*",
-    "async": "*"
+    "async": "*",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "coffee-script": "*",

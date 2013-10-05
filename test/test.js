@@ -8,8 +8,6 @@
 
   chai.use(chaiAsPromised);
 
-  chai.Assertion.includeStack = true;
-
   should = chai.should();
 
   ArrayPromise = require('../');
@@ -30,11 +28,12 @@
   };
 
   Object.forEach({
-    "Normal Promise, casted to ArrayPromise": function() {
-      var defer;
-      defer = Q.defer();
-      return this.defered = defer.array;
-    },
+    /* Disable arraypromise now, because it clutters tests
+    "Normal Promise, casted to ArrayPromise": ->
+      defer = Q.defer()
+      @defered = defer.array
+    */
+
     "ArrayPromise": function() {
       return this.defered = new ArrayPromise();
     }
@@ -55,6 +54,30 @@
         }
       }, function(fullfilling, whenFullfilled) {
         describe(whenFullfilled, function() {
+          describe("#_groupBy()", function() {
+            it("should return an even and odd propertie", function(done) {
+              this.defered._groupBy(function(val) {
+                if ((val % 2) === 0) {
+                  return 'even';
+                } else {
+                  return 'odd';
+                }
+              }).should.become({
+                odd: [1, 3],
+                even: [2, 4]
+              }).notify(done);
+              return fullfilling(this.defered);
+            });
+            return it("(returning a promise) should return an even and odd propertie", function(done) {
+              this.defered._groupBy(function(val) {
+                return Q.resolve((val % 2) === 0 ? 'even' : 'odd');
+              }).should.become({
+                odd: [1, 3],
+                even: [2, 4]
+              }).notify(done);
+              return fullfilling(this.defered);
+            });
+          });
           describe("#filter()", function() {
             return it("should return only even numbers", function(done) {
               this.defered.filter(function(val) {
