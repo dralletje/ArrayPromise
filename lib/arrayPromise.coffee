@@ -73,7 +73,7 @@ oneArgument = ["filter", "reject"]
 
 
 ## Underscore methods
-["groupBy"].forEach (method) ->
+["each", "map", "reduce", "reduceRight", "find", "filter", "where", "findWhere", "reject", "every", "some", "contains", "invoke", "pluck", "max", "min", "sortBy", "groupBy", "countBy", "shuffle", "toArray", "size"].forEach (method) ->
   module.exports::["_" + method] = (iterator, args...) ->
     m = _[method]
     
