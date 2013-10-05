@@ -49,7 +49,7 @@ Object.forEach {
             ).notify(done)
             fullfilling @defered
 
-          it "(returning a promise) should return an even and odd propertie", (done) ->
+          it.skip "(returning a promise) should return an even and odd propertie", (done) ->
             @defered._groupBy((val) ->
               Q.resolve if (val % 2) is 0 then 'even' else 'odd'
             ).should.become(
